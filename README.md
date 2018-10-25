@@ -31,6 +31,9 @@ func main() {
   w := wrq.New()
   defer w.Stop()
 
+  // to customise the number of workers and queue size, use
+  // w := wrq.NewWithSettings(NAME, QUEUE_SIZE, MAX_WORKERS)
+  
   j1 := &job{
     name: "test job 1 sec",
     delay: time.Second * 1,
