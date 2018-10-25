@@ -1,13 +1,13 @@
 package wrq
 
 import (
-  "sync"
+	"sync"
 )
 
 const (
-  DEFAULT_NAME       = "wrq"
-  DEFAULT_QUEUE_SIZE = 100
-  DEFAULT_WORKERS    = 100
+	DEFAULT_NAME       = "wrq"
+	DEFAULT_QUEUE_SIZE = 100
+	DEFAULT_WORKERS    = 100
 )
 
 type Dispatcher struct {
@@ -20,14 +20,14 @@ type Dispatcher struct {
 }
 
 func New() *Dispatcher {
-  return NewWithSettings(DEFAULT_NAME, DEFAULT_QUEUE_SIZE, DEFAULT_WORKERS)
+	return NewWithSettings(DEFAULT_NAME, DEFAULT_QUEUE_SIZE, DEFAULT_WORKERS)
 }
 
 func NewWithSettings(name string, queueSize int, maxWorkers int) *Dispatcher {
-  workerPool := make(chan chan Job, maxWorkers)
+	workerPool := make(chan chan Job, maxWorkers)
 	jobQueue := make(chan Job, queueSize)
 
-	return &Dispatcher{
+	d := &Dispatcher{
 		name:       name,
 		jobQueue:   jobQueue,
 		maxWorkers: maxWorkers,
@@ -35,9 +35,11 @@ func NewWithSettings(name string, queueSize int, maxWorkers int) *Dispatcher {
 		wg:         &sync.WaitGroup{},
 		doneCh:     make(chan bool),
 	}
+	d.run()
+	return d
 }
 
-func (d *Dispatcher) Run() {
+func (d *Dispatcher) run() {
 	for i := 0; i < d.maxWorkers; i++ {
 		id := i + 1
 		d.wg.Add(1)

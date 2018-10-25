@@ -1,7 +1,7 @@
 package wrq
 
 import (
-  "sync"
+	"sync"
 )
 
 type Worker struct {
